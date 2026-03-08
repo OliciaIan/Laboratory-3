@@ -2,77 +2,80 @@
 <summary>Experiment 15: Amplitude Shift Keying (ASK)</summary>
 
 ## Introduction
-Amplitude Shift Keying (ASK) is a digital modulation technique where the amplitude of a carrier signal changes according to the digital data. The carrier is switched **on for binary 1** and **off for binary 0** (or between two amplitude levels). ASK allows **Frequency Division Multiplexing (FDM)** but is highly susceptible to noise because the information is carried in the signal amplitude.
+Amplitude Shift Keying (ASK) is the digital equivalent of **Amplitude Modulation (AM)**. In this scheme, a binary data stream acts as the modulating signal, switching a high-frequency carrier wave between two distinct amplitude levels—typically a specific voltage for logic **'1'** and **0V for logic '0'** (also known as **On-Off Keying**). This allows digital data to be transmitted over analog mediums like **radio waves or fiber optics**.
 
 ## Objectives
-- Generate an ASK signal using a switching method.
-- Recover the digital data using an envelope detector.
-- Restore the digital signal using a comparator.
+- **Carrier Modulation:** Successfully switch a sine wave carrier using a unipolar digital signal.  
+- **Asynchronous Demodulation:** Recover the original bitstream using non-coherent envelope detection.  
+- **Pulse Shaping:** Observe filtering effects on square pulses and use a comparator to restore digital integrity.
 
 ## Materials Used
 - Emona Telecoms-Trainer 101  
-- Dual-channel 20MHz oscilloscope  
-- Sequence Generator module  
-- Dual Analog Switch module  
-- Tuneable Low-pass Filter  
-- Utilities module (Rectifier)
+- Oscilloscope (Dual Channel, 20MHz)  
+- Modules: Sequence Generator, Dual Analog Switch, VCO (100kHz carrier), Utilities (Rectifier), Tuneable LPF  
 
 ## Procedures
-1. **ASK Generation:** Connect a **2kHz SINE carrier** to the Dual Analog Switch controlled by the Sequence Generator.
-2. **Frequency Adjustment:** Replace the 2kHz carrier with a **100kHz carrier from the VCO**.
-3. **Demodulation:** Pass the ASK signal through a **Rectifier** then a **Tuneable Low-pass Filter** to detect the envelope.
-4. **Restoration:** Connect the filter output to a **Comparator** and adjust the reference voltage to recover the digital pulses.
 
-## Answers to Questions
+### Part A – Generation
+A **2kHz digital signal** controls a Dual Analog Switch.  
+A **100kHz sine carrier** is applied to the switch input.  
+- Data = High → Carrier passes through  
+- Data = Low → Output = 0V
 
-**Q1:** What is the relationship between the digital signal and the presence of the carrier?  
-**Answer:** The carrier appears when the digital signal is **logic-1** and disappears when it is **logic-0**.
+### Part B – Detection
+The ASK signal passes through a **diode rectifier**, converting negative cycles into positive ones.
 
-**Q2:** What is the ASK signal voltage when the digital signal is logic-0?  
-**Answer:** **0V**.
+### Part C – Filtering
+The rectified signal enters the **Tuneable LPF**. Adjusting the cut-off removes carrier ripples and produces a **rounded digital waveform**.
 
-**Q3:** What feature suggests that ASK behaves like an AM signal?  
-**Answer:** The **upper and lower envelopes follow the digital data pattern**.
+### Part D – Restoration
+The filtered signal is sent to a **Comparator**. A threshold reference voltage restores a **clean digital signal**.
+
+## Questions
+
+**Why is the carrier frequency much higher than the data frequency?**  
+To ensure multiple carrier cycles occur within one bit period, making envelope detection reliable.
+
+**What is the main disadvantage of ASK?**  
+ASK is highly susceptible to **noise**, which can create false pulses.
 
 ## Overall Conclusion
-ASK converts digital data into an analog signal for transmission. Envelope detection recovers the signal, but pulse edges become rounded, requiring a comparator to restore clean digital data.
+ASK demonstrates simple digital modulation. However, filtering rounds the recovered pulses, so a **comparator stage is necessary to restore the digital waveform**.
 
 </details>
 
 ---
 
 <details>
-<summary>Experiment 16: Binary Phase Shift Keying (BPSK) – Introduction</summary>
+<summary>Experiment 16: Binary Phase Shift Keying (BPSK)</summary>
 
 ## Introduction
-Binary Phase Shift Keying (BPSK) is a modulation technique where the **phase of a constant-amplitude carrier shifts by 180°** to represent binary values. Because the amplitude remains constant, BPSK is **much more resistant to noise** than ASK.
+Binary Phase Shift Keying (**BPSK**) is a digital modulation scheme where information is encoded by **shifting the carrier phase by 180°**. Unlike ASK, the **amplitude remains constant**, making BPSK more resistant to amplitude noise.
 
 ## Objectives
-- Generate a BPSK signal using a **Balanced Modulator**.
-- Observe **180° phase reversals** during digital transitions.
+- **Phase Manipulation:** Map logic **0 → 0° phase** and **1 → 180° phase**.  
+- **Balanced Modulation:** Use a Balanced Modulator to create a **suppressed-carrier signal**.
 
 ## Materials Used
 - Emona Telecoms-Trainer 101  
-- Balanced Modulator module  
 - Sequence Generator  
-- Master Signals module (sine carrier)
+- Balanced Modulator  
+- Master Signals module (100kHz sine carrier)
 
 ## Procedures
-1. Connect the **digital data from the Sequence Generator** to the Balanced Modulator.
-2. Apply the **sinewave carrier** from the Master Signals module.
-3. Observe the **BPSK output** on the oscilloscope.
-4. Focus on points where the digital data changes state to observe the **phase reversals**.
 
-## Answers to Questions
+### System Setup
+Connect the **100kHz carrier** to the Balanced Modulator carrier input.  
+Connect the **digital data stream** to the message input.
 
-**Q1:** How does the carrier change when data switches from 0 to 1?  
-**Answer:** The carrier undergoes a **180° phase reversal**.
+### Phase Observation
+Use the oscilloscope’s **zoom/sweep magnification** to observe transitions.
 
-**Q2:** Why is BPSK more robust than ASK?  
-**Answer:** Because **information is encoded in phase instead of amplitude**, making it less sensitive to amplitude noise.
+### Analysis
+Observe the **phase jump** whenever the digital signal changes state.
 
 ## Overall Conclusion
-BPSK provides reliable digital transmission in noisy environments by encoding information in **phase changes** instead of amplitude variations.
+BPSK successfully encodes digital information using **phase changes rather than amplitude changes**, producing a **suppressed-carrier signal** and improving noise immunity.
 
 </details>
 
@@ -82,41 +85,36 @@ BPSK provides reliable digital transmission in noisy environments by encoding in
 <summary>Experiment 17: Binary Phase Shift Keying (Generation & Recovery)</summary>
 
 ## Introduction
-BPSK signals use **suppressed carrier modulation (DSBSC)**, meaning the carrier is not directly transmitted. Therefore, **envelope detection cannot be used**. Instead, a **product detector with a synchronized carrier** is required.
+This experiment introduces **BPSK demodulation** using a **Product Detector**. Because BPSK is a **suppressed carrier signal**, envelope detection cannot be used. The receiver must generate a **coherent carrier synchronized with the transmitter**.
 
 ## Objectives
-- Generate a BPSK signal using a Multiplier module.
-- Recover digital data using a product detector.
-- Restore the signal using a comparator.
-
-## Materials Used
-- Emona Telecoms-Trainer 101  
-- Two Multiplier modules  
-- Tuneable Low-pass Filter  
-- Utilities module (Comparator)
+- Implement **coherent demodulation** using a product detector.  
+- Understand the need for **carrier synchronization**.
 
 ## Procedures
-1. **Modulation:** Multiply a **100kHz carrier** with the digital data to generate the BPSK signal.
-2. **Demodulation:** Feed the BPSK signal and original carrier into a second **Multiplier**.
-3. **Filtering:** Pass the output through a **Tuneable Low-pass Filter**.
-4. **Restoration:** Use a **Comparator** to clean up the digital signal.
 
-## Answers to Questions
+### Generation
+Follow the **BPSK generation process from Experiment 16**.
 
-**Q1:** What happens during logic transitions?  
-**Answer:** The carrier **phase reverses by 180°**.
+### Product Detection
+Feed the BPSK signal into a **Multiplier** and apply the original **100kHz carrier** to the other input.
 
-**Q2:** What feature suggests BPSK is DSBSC?  
-**Answer:** Alternating halves of the signal envelope resemble the digital message.
+### Baseband Extraction
+Use a **Tuneable LPF** to remove the high-frequency components, leaving the baseband signal.
 
-**Q3:** Why is the recovered signal imperfect?  
-**Answer:** Filtering **rounds the edges of pulses**.
+### Restoration
+Use a **Comparator** to recover the digital pulses.
 
-**Q4:** What is used to clean up the recovered signal?  
-**Answer:** A **Comparator**.
+## Questions
+
+**What happens if the local carrier phase shifts by 90°?**  
+The output drops to **zero**, since orthogonal signals multiply to zero.
+
+**Why is BPSK better than ASK?**  
+It achieves a **lower Bit Error Rate (BER)** in noisy environments.
 
 ## Overall Conclusion
-BPSK recovery requires **synchronous detection**. Although more complex than ASK, it provides improved noise immunity.
+BPSK provides **better noise immunity**, but the receiver must maintain **precise synchronization** with the carrier.
 
 </details>
 
@@ -126,39 +124,35 @@ BPSK recovery requires **synchronous detection**. Although more complex than ASK
 <summary>Experiment 18: Quadrature Phase Shift Keying (QPSK)</summary>
 
 ## Introduction
-Quadrature Phase Shift Keying (QPSK) transmits **two bits per symbol** by splitting the data into **I (In-phase)** and **Q (Quadrature)** channels. Each stream modulates orthogonal carriers (sine and cosine), producing two BPSK signals that are combined.
+Quadrature Phase Shift Keying (**QPSK**) is a multi-level modulation technique that **transmits two bits per symbol**, doubling the data rate within the same bandwidth. It uses **four phase states**: 45°, 135°, 225°, and 315°.
 
 ## Objectives
-- Generate a QPSK signal from two BPSK signals.
-- Understand phase discrimination in demodulation.
-- Observe the constant amplitude of QPSK.
+- **Bit Splitting:** Separate a serial bitstream into **I (In-phase)** and **Q (Quadrature)** streams.  
+- **Orthogonal Modulation:** Modulate sine and cosine carriers independently.
 
 ## Materials Used
-- Emona Telecoms-Trainer 101  
-- Dual-channel 20MHz oscilloscope  
-- Sequence Generator module  
-- Serial-to-Parallel Converter module  
+- Serial-to-Parallel Converter  
 - Phase Shifter module  
-- Multiplier modules  
-- Adder module
+- Two Multiplier modules  
+- Adder module  
 
 ## Procedures
-1. **Data Split:** Use the Serial-to-Parallel converter to create **I and Q channels**.
-2. **Carrier Setup:** Use **100kHz sine and cosine carriers**.
-3. **Modulation:** Generate two BPSK signals using Multiplier modules.
-4. **Summing:** Combine them using the **Adder module** to form the QPSK signal.
-5. **Demodulation Demo:** Use a Phase Shifter and Multiplier to isolate one BPSK signal.
 
-## Answers to Questions
+### Serial-to-Parallel Conversion
+Split the Sequence Generator output into **I and Q streams**.
 
-**Q4:** What type of transmission is present at the Adder output?  
-**Answer:** A **Quadrature Phase Shift Keying (QPSK)** signal.
+### Carrier Generation
+Generate a **cosine carrier** by passing a sine wave through a **90° Phase Shifter**.
 
-**Q5:** Why is only one sinewave visible even though two BPSK signals exist?  
-**Answer:** Because both signals share the **same frequency**, and their sum appears as a single waveform with varying phase.
+### I/Q Modulation
+- I stream → Sine carrier  
+- Q stream → Cosine carrier
+
+### Vector Summation
+Combine both signals using the **Adder module** to create the **QPSK signal**.
 
 ## Overall Conclusion
-QPSK combines two BPSK signals on orthogonal carriers, **doubling bandwidth efficiency** compared to BPSK.
+QPSK effectively combines **two BPSK systems**, allowing **twice the data rate within the same bandwidth**, forming the basis of many modern wireless communication systems.
 
 </details>
 
@@ -168,37 +162,25 @@ QPSK combines two BPSK signals on orthogonal carriers, **doubling bandwidth effi
 <summary>Experiment 19: DSSS Modulation & Demodulation</summary>
 
 ## Introduction
-Direct Sequence Spread Spectrum (DSSS) spreads a signal across a wide bandwidth using a **Pseudo-Noise (PN) sequence**. This provides **jamming resistance and security**, as only receivers with the same PN sequence can decode the signal.
+Direct Sequence Spread Spectrum (**DSSS**) multiplies the message signal by a **fast Pseudo-Noise (PN) sequence**, spreading the signal across a wide bandwidth. This improves **interference resistance and security**.
 
 ## Objectives
-- Understand spread spectrum principles.
-- Explore interference resistance and encryption properties.
-- Recover a DSSS signal using despreading.
-
-## Materials Used
-- Emona Telecoms-Trainer 101  
-- Sequence Generator (PN code)  
-- Multiplier module  
-- Tuneable Low-pass Filter
+- Observe how PN sequences **increase bandwidth**.  
+- Recover signals even with **narrow-band interference**.
 
 ## Procedures
-1. **Spreading:** Multiply the digital message by a **fast PN sequence**.
-2. **Despreading:** Multiply the received signal by the **same PN sequence**.
-3. **Recovery:** Use a **low-pass filter** to obtain the original message.
 
-## Answers to Questions
+### Spreading
+Multiply a **slow digital signal (2kHz)** with a **faster PN sequence**.
 
-**Q1:** Why is DSSS difficult to jam?  
-**Answer:** Because the signal is spread across a **wide bandwidth**.
+### Despreading
+At the receiver, multiply the spread signal by the **same PN sequence**.
 
-**Q2:** What happens if the receiver uses the wrong PN sequence?  
-**Answer:** The signal appears as **noise** and cannot be decoded.
-
-**Q3:** How does DSSS provide encryption?  
-**Answer:** Only receivers with the **correct synchronized PN sequence** can recover the message.
+### Filtering
+Use a **Low-Pass Filter** to recover the original message.
 
 ## Overall Conclusion
-DSSS improves **security, interference resistance, and robustness**, making it widely used in modern wireless systems.
+DSSS enhances **security and interference immunity**. Without the correct PN sequence, the signal appears as **random noise**.
 
 </details>
 
@@ -208,34 +190,24 @@ DSSS improves **security, interference resistance, and robustness**, making it w
 <summary>Experiment 20: Understanding Software Defined Radio (SDR)</summary>
 
 ## Introduction
-Software Defined Radio (SDR) replaces traditional hardware radio components with **software implementations** running on computers or embedded systems. This allows flexible signal processing using platforms like **GNU Radio**.
+Software Defined Radio (**SDR**) moves radio signal processing from hardware circuits into **software algorithms**. This allows one hardware device to support multiple communication systems simply by changing the software.
 
 ## Objectives
-- Learn SDR software and hardware interfaces.
-- Explore sampling and resampling in software.
-- Demonstrate FM and IQ modulation/demodulation.
-
-## Materials Used
-- Emona Telecoms-Trainer 101/C  
-- PC with SDR software (GNU Radio or PicoScope)  
-- SDR interface device (RTL-SDR)  
-- Patch leads and Master Signals module
+- Interface the **ETT-101 hardware with a PC-based SDR system**.  
+- Observe **digital signal processing in software**.
 
 ## Procedures
-1. **Familiarization:** Connect ETT-101 hardware to the PC.
-2. **Loop-back Test:** Run a software loop-back to confirm communication.
-3. **Sampling Study:** Adjust sampling rates and observe aliasing effects.
-4. **Hybrid Demo:** Use ETT-101 hardware for modulation and SDR software for demodulation and analysis.
 
-## Answers to Questions
+### Hardware Interface
+Connect the **ETT-101 output** to a PC sound card or SDR interface.
 
-**What is Software Defined Radio?**  
-A radio system where signal processing components are implemented using **software instead of dedicated hardware**.
+### Software Configuration
+Use software such as **GNU Radio** to configure demodulator blocks.
 
-**What is the advantage of SDR?**  
-It is **flexible and reconfigurable**, allowing one device to support multiple communication standards.
+### Analysis
+Generate a signal using the ETT-101 and analyze it using **FFT spectrum visualization** and software demodulation.
 
 ## Overall Conclusion
-SDR demonstrates the transition from fixed hardware radios to **programmable signal processing systems**, enabling rapid development and versatile communication experiments.
+SDR demonstrates the evolution of communication systems from **fixed hardware implementations to flexible software-based radio platforms**, enabling advanced signal processing and reconfigurable communications.
 
 </details>
